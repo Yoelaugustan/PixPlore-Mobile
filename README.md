@@ -1,4 +1,4 @@
-## 1. Jagan Lupa npm install misalnya pas pindah branch, karena tiap branch dependenciesnya bisa beda beda
+## 1. Jagan Lupa npm install pas pindah branch, karena tiap branch dependenciesnya bisa beda beda
    ```bash
    npm install 
    ```
