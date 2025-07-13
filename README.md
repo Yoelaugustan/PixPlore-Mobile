@@ -4,7 +4,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ## Get started
 
-1. Jagan Lupa npm install misalnya pas pindah branch, karena tiap branch dependenciesnya bisa beda beda
+## 1. Jagan Lupa npm install misalnya pas pindah branch, karena tiap branch dependenciesnya bisa beda beda
    ```bash
    npm install 
    ```
