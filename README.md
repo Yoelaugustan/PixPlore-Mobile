@@ -3,7 +3,7 @@
    npm install 
    ```
 
-## 3. Kalo Pake Component yg udah jadi punya dari internet, tambahin "--legacy-peer-deps", karena sebagian dependencies di react native kita ada beda version
+## 2. Kalo Pake Component yg udah jadi punya dari internet, tambahin "--legacy-peer-deps", karena sebagian dependencies di react native kita ada beda version
 contohnya: 
    ```bash
    npm install react-native-svg --legacy-peer-deps
