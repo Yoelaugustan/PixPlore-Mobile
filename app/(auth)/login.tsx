@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import { spacingX, spacingY } from '@/constants/theme'
@@ -9,6 +9,7 @@ import Input from '@/components/input'
 import * as Icons from 'phosphor-react-native'
 import Button from '@/components/Button'
 import { useRouter } from 'expo-router'
+import { supabase } from '@/lib/supabase'
 
 const Login = () => {
     const emailRef = useRef('')
@@ -17,7 +18,21 @@ const Login = () => {
     const [showPass, setShowPass] = useState(false)
     const router = useRouter()
 
-    const handleSubmit = async()=>{}
+    const handleSubmit = async()=>{
+        if(!emailRef.current || !passwordRef.current){
+            Alert.alert('Login', 'Pleese fill all the fields')
+            return
+        }
+
+        setIsLoading(true)
+        const { error } = await supabase.auth.signInWithPassword({
+            email: emailRef.current,
+            password: passwordRef.current,
+        })
+        setIsLoading(false)
+        if (error) Alert.alert(error.message)
+        
+    }
 
     return (
         <ScreenWrapper>

@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { spacingX, spacingY } from '@/constants/theme'
 import { verticalScale } from '@/utils/styling'
@@ -9,6 +9,7 @@ import Input from '@/components/input'
 import * as Icons from 'phosphor-react-native'
 import Button from '@/components/Button'
 import { useRouter } from 'expo-router'
+import { supabase } from '@/lib/supabase'
 
 const Register = () => {
     const emailRef = useRef('')
@@ -20,7 +21,37 @@ const Register = () => {
     const [showConfPass, setShowConfPass] = useState(false)
     const router = useRouter()
 
-    const handleSubmit = async()=>{}
+    const handleSubmit = async()=>{
+        let name = nameRef.current.trim()
+        let email = emailRef.current.trim()
+        let password = passwordRef.current.trim()
+        let passwordConfirm = passwordConfirmRef.current.trim()
+
+        if (!name || !email || !password || !passwordConfirm) {
+            Alert.alert('Sign Up', 'Please fill in all fields.');
+            return;
+        }
+
+        if (password !== passwordConfirm) {
+            Alert.alert('Sign Up', 'Passwords do not match.');
+            return;
+        }
+
+        setIsLoading(true)
+        const { error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    name
+                }
+            }
+        })
+        setIsLoading(false)
+        if (error) Alert.alert(error.message)
+        else Alert.alert("Account Created")
+        
+    }
     
     return (
         <ScreenWrapper>
