@@ -1,11 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Login from './(auth)/login';
 
 const index = () => {
   return (
-    <View style={styles.container}>
-      <Text>index</Text>
-    </View>
+    <Login />
   );
 };
 
