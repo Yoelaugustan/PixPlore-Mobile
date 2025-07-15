@@ -38,19 +38,30 @@ const Register = () => {
         }
 
         setIsLoading(true)
-        const { error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    name
+        try{
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        name
+                    }
                 }
+            })
+
+            if (error){
+                Alert.alert('Sign Up Error', error.message)
+                return
             }
-        })
-        setIsLoading(false)
-        if (error) Alert.alert(error.message)
-        else Alert.alert("Account Created")
-        
+
+            if (data.user) {
+                router.replace('/tabs')
+            }
+        } catch (error: any) {
+            Alert.alert('Unexpected Error', error?.message?.toString() || 'Something went wrong.')
+        } finally {
+            setIsLoading(false)
+        }
     }
     
     return (

@@ -38,7 +38,7 @@ const Login = () => {
             }
 
             if (data.user) {
-                router.replace("/tabs/index")
+                router.replace("/tabs")
             }
             
         } catch(error: any){
