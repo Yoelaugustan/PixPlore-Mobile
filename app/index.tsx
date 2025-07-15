@@ -1,22 +1,22 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Link } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Login from './(auth)/login';
 import ScreenWrapper from '@/components/ScreenWrapper';
 
-const index = () => {
+const Stack = createNativeStackNavigator();
+
+export default function HomeScreen({ navigation }: any) {
   return (
     <ScreenWrapper>
-      <Text>Home Page</Text>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>HomePage</Text>
+        <Link href="/flashCardPage">Flash Cards</Link>
+        <Link href="/cameraPage">Pix it!</Link>
+        <Link href="/cameraPage"></Link>
+      </View>
     </ScreenWrapper>
   );
-};
+}
 
-export default index;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+const styles = StyleSheet.create();
