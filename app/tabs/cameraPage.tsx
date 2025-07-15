@@ -9,4 +9,6 @@ const mainPage = () => {
     )
 }
 
+export default mainPage
+
 const styles = StyleSheet.create({})
