@@ -1,10 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Login from './(auth)/login';
+import ScreenWrapper from '@/components/ScreenWrapper';
 
 const index = () => {
   return (
-    <Login />
+    <ScreenWrapper>
+      <Text>Home Page</Text>
+    </ScreenWrapper>
   );
 };
 
