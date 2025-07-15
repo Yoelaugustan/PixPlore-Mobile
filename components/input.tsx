@@ -34,11 +34,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
-        borderColor: "#a3a3a3",
-        borderRadius: radius._17,
+        borderColor: "#d4d4d4",
+        borderRadius: radius.full,
         borderCurve: 'continuous',
         paddingHorizontal: spacingX._15,
-        gap: spacingX._10
+        gap: spacingX._10,
+        backgroundColor: "#e5e5e5"
     },
     input: {
         flex: 1,
