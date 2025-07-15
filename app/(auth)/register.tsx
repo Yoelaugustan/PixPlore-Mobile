@@ -38,19 +38,30 @@ const Register = () => {
         }
 
         setIsLoading(true)
-        const { error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    name
+        try{
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        name
+                    }
                 }
+            })
+
+            if (error){
+                Alert.alert('Sign Up Error', error.message)
+                return
             }
-        })
-        setIsLoading(false)
-        if (error) Alert.alert(error.message)
-        else Alert.alert("Account Created")
-        
+
+            if (data.user) {
+                router.replace('/tabs')
+            }
+        } catch (error: any) {
+            Alert.alert('Unexpected Error', error?.message?.toString() || 'Something went wrong.')
+        } finally {
+            setIsLoading(false)
+        }
     }
     
     return (
@@ -120,7 +131,7 @@ const Register = () => {
                     <Animated.View entering={FadeInDown.duration(1000).delay(300).springify().damping(12)} style={styles.footer}>
                         <Text style={{ fontSize: verticalScale(15) }}>Already have an account?</Text>
                         <Pressable onPress={()=>router.navigate('/(auth)/login')}>
-                            <Text style={{ fontSize: verticalScale(15), fontWeight: '700', color: 'white' }}>Log In</Text>
+                            <Text style={{ fontSize: verticalScale(15), fontWeight: '700', color: 'black' }}>Log In</Text>
                         </Pressable>
                     </Animated.View>
                 </View>
