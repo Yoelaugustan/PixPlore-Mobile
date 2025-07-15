@@ -9,8 +9,8 @@ const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
   let paddingBottom = 0 
 
   if(isModal){
-    let paddingTop = Platform.OS == 'ios'? height * 0.02 : 45;
-    let paddingBottom = height * 0.02 
+    paddingTop = Platform.OS == 'ios'? height * 0.02 : 45;
+    paddingBottom = height * 0.02 
   }
   return (
     <View 
