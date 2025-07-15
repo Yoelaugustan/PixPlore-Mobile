@@ -11,7 +11,7 @@ const index = () => {
         try{
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
-              router.replace('/tabs/index')
+              router.replace('/tabs')
             }
             else{
               setTimeout(() => {
