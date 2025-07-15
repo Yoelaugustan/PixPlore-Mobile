@@ -94,7 +94,7 @@ const Login = () => {
                     <Animated.View entering={FadeInDown.duration(1000).delay(300).springify().damping(12)} style={styles.footer}>
                         <Text style={{ fontSize: verticalScale(15) }}>Don't have an account?</Text>
                         <Pressable onPress={()=>router.navigate('/(auth)/register')}>
-                            <Text style={{ fontSize: verticalScale(15), fontWeight: '700', color: 'white' }}>Sign Up</Text>
+                            <Text style={{ fontSize: verticalScale(15), fontWeight: '700', color: 'black' }}>Sign Up</Text>
                         </Pressable>
                     </Animated.View>
                 </View>

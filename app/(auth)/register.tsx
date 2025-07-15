@@ -131,7 +131,7 @@ const Register = () => {
                     <Animated.View entering={FadeInDown.duration(1000).delay(300).springify().damping(12)} style={styles.footer}>
                         <Text style={{ fontSize: verticalScale(15) }}>Already have an account?</Text>
                         <Pressable onPress={()=>router.navigate('/(auth)/login')}>
-                            <Text style={{ fontSize: verticalScale(15), fontWeight: '700', color: 'white' }}>Log In</Text>
+                            <Text style={{ fontSize: verticalScale(15), fontWeight: '700', color: 'black' }}>Log In</Text>
                         </Pressable>
                     </Animated.View>
                 </View>
