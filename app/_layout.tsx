@@ -1,14 +1,66 @@
-import { Stack } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
 
 export default function RootLayout() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen 
-        name="index" 
-        options={{ 
+    <Tabs
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: '#0f0D23',
+          borderRadius: 50,
+          marginHorizontal: 20,
+          marginBottom: 36,
+          height: 42,
+          position: 'absolute',
+          overflow: 'hidden',
+          borderWidth: 1,
+          borderColor: '#0f0D23',
+        }
+      }}
+    >
+      <Tabs.Screen 
+        name='index'
+        options={{
           title: 'Home',
-        }} 
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'home' : 'home-outline'}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
       />
-    </Stack>
-  );
+      <Tabs.Screen 
+        name='cameraPage'
+        options={{
+          title: 'Pix it!',
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'camera' : 'camera-outline'}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen 
+        name='flashCardPage'
+        options={{
+          title: 'Flash Cards',
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'book' : 'book-outline'}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+    </Tabs>
+  )
 }
