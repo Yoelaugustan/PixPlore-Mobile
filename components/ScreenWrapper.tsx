@@ -16,9 +16,9 @@ const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
     <View 
         style={[
             {
-                paddingTop,
-                paddingBottom,
-                flex: 1,
+              paddingTop,
+              paddingBottom,
+              flex: 1,
             },
             style
     ]}>

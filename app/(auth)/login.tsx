@@ -4,7 +4,7 @@ import ScreenWrapper from '@/components/ScreenWrapper'
 import { spacingX, spacingY } from '@/constants/theme'
 import { verticalScale } from '@/utils/styling'
 import BackButton from '@/components/BackButton'
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 import Input from '@/components/input'
 import * as Icons from 'phosphor-react-native'
 import Button from '@/components/Button'
@@ -25,13 +25,27 @@ const Login = () => {
         }
 
         setIsLoading(true)
-        const { error } = await supabase.auth.signInWithPassword({
-            email: emailRef.current,
-            password: passwordRef.current,
-        })
-        setIsLoading(false)
-        if (error) Alert.alert(error.message)
-        
+
+        try{
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: emailRef.current,
+                password: passwordRef.current,
+            })
+
+            if (error) {
+                Alert.alert("Login Error", error.message)
+                return
+            }
+
+            if (data.user) {
+                router.replace("/tabs")
+            }
+            
+        } catch(error: any){
+            Alert.alert("Login Error", error.message || "An unexpected error occurred")
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -80,7 +94,7 @@ const Login = () => {
                     <Animated.View entering={FadeInDown.duration(1000).delay(300).springify().damping(12)} style={styles.footer}>
                         <Text style={{ fontSize: verticalScale(15) }}>Don't have an account?</Text>
                         <Pressable onPress={()=>router.navigate('/(auth)/register')}>
-                            <Text style={{ fontSize: verticalScale(15), fontWeight: '700', color: 'white' }}>Sign Up</Text>
+                            <Text style={{ fontSize: verticalScale(15), fontWeight: '700', color: 'black' }}>Sign Up</Text>
                         </Pressable>
                     </Animated.View>
                 </View>
