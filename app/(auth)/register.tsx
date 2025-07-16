@@ -1,15 +1,15 @@
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { spacingX, spacingY } from '@/constants/theme'
-import { verticalScale } from '@/utils/styling'
-import ScreenWrapper from '@/components/ScreenWrapper'
-import Animated, { FadeInDown } from 'react-native-reanimated'
 import BackButton from '@/components/BackButton'
-import Input from '@/components/input'
-import * as Icons from 'phosphor-react-native'
 import Button from '@/components/Button'
-import { useRouter } from 'expo-router'
+import Input from '@/components/input'
+import ScreenWrapper from '@/components/ScreenWrapper'
+import { spacingX, spacingY } from '@/constants/theme'
 import { supabase } from '@/lib/supabase'
+import { verticalScale } from '@/utils/styling'
+import { useRouter } from 'expo-router'
+import * as Icons from 'phosphor-react-native'
+import React, { useRef, useState } from 'react'
+import { Alert, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 
 const Register = () => {
     const emailRef = useRef('')
@@ -65,7 +65,7 @@ const Register = () => {
     }
     
     return (
-        <ScreenWrapper style={{ flex: 1 }}>
+        <ScreenWrapper style={{ flex: 1, backgroundColor: '#65ff96ff' }}>
             <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={styles.container}>
                     {/* Back Button */}

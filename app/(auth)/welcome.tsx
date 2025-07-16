@@ -1,16 +1,16 @@
-import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import Button from '@/components/Button'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import { spacingX, spacingY } from '@/constants/theme'
 import { verticalScale } from '@/utils/styling'
-import Button from '@/components/Button'
-import Animated, { FadeIn, FadeInDown } from "react-native-reanimated"
 import { useRouter } from 'expo-router'
+import React from 'react'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated"
 
 const Welcome = () => {
     const router = useRouter();
     return (
-        <ScreenWrapper style={{ flex: 1 }}>
+        <ScreenWrapper style={{ flex: 1, backgroundColor: '#e291ffff', }}>
             <View style={styles.container}>
                 <View style={styles.content}>
                 <Animated.Image
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         paddingTop: spacingY._7,
+        
     },
     content: {
         flex: 1,
