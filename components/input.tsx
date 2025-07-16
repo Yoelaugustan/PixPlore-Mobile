@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         borderCurve: 'continuous',
         paddingHorizontal: spacingX._15,
         gap: spacingX._10,
-        backgroundColor: "#e5e5e5"
+        backgroundColor: "white"
     },
     input: {
         flex: 1,

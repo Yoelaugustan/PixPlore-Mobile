@@ -10,7 +10,7 @@ import { useRouter } from 'expo-router'
 const Welcome = () => {
     const router = useRouter();
     return (
-        <ScreenWrapper>
+        <ScreenWrapper style={{ flex: 1 }}>
             <View style={styles.container}>
                 <View style={styles.content}>
                 <Animated.Image
