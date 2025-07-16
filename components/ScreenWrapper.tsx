@@ -51,10 +51,10 @@ const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
   const y3 = cy - rectHeight3 / 2;
   
   return (
-    <View style={[styles.container, {paddingTop,paddingBottom,flex: 1,},style]}>
-        <StatusBar barStyle='light-content' />
+    <View style={[styles.container, style]}>
+        <StatusBar barStyle='light-content' translucent={true} backgroundColor="transparent"/>
 
-        <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
+        <Svg height="100%" width="100%" style={StyleSheet.absoluteFillObject}>
           <Defs>
             <RadialGradient id="grad1" cx="30%" cy="30%" r="90%">
               <Stop offset="0%" stopColor="#d17dffff" stopOpacity="1" />
@@ -90,7 +90,9 @@ const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
           
         </Svg>
 
-        {children}
+        <View style={[styles.contentContainer, { paddingTop, paddingBottom }]}>
+          {children}
+      </View>
     </View>
   )
 }
@@ -101,5 +103,8 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     backgroundColor: '#fff',
+  },
+  contentContainer: {
+    flex: 1,
   },
 })
