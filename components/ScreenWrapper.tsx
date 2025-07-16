@@ -1,6 +1,6 @@
-import { Dimensions, Platform, StatusBar, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { ScreenWrapperProps } from '@/types'
+import React from 'react'
+import { Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native'
 
 const {height} = Dimensions.get('window')
 
@@ -13,15 +13,7 @@ const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
     paddingBottom = height * 0.02 
   }
   return (
-    <View 
-        style={[
-            {
-              paddingTop,
-              paddingBottom,
-              flex: 1,
-            },
-            style
-    ]}>
+    <View style={[{paddingTop,paddingBottom,flex: 1,},style]}>
         <StatusBar barStyle='light-content' />
         {children}
     </View>
@@ -30,4 +22,5 @@ const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
 
 export default ScreenWrapper
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+})
