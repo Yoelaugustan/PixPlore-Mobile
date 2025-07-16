@@ -28,15 +28,17 @@ const handleLogOut = async() =>{
 
 const index = () => {
   return (
-    <ScreenWrapper style={styles.container}>
-      <View style={styles.mainThing}>
-        <Image source={require('../../assets/images/Logo.png')} style={{ width: 220, height: 180}}/>
-        <Text style={styles.subtext}>Learning through lenses, growing through curiosity</Text>
-      </View>
+    <ScreenWrapper style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.mainThing}>
+          <Image source={require('../../assets/images/Logo.png')} style={{ width: 220, height: 180}}/>
+          <Text style={styles.subtext}>Learning through lenses, growing through curiosity</Text>
+        </View>
 
-      <Button style={{ width: '50%' }} onPress={handleLogOut}>
-        <Text style={{ color: 'white', fontWeight: '700' }}>Logout</Text>
-      </Button>
+        <Button style={{ width: '50%' }} onPress={handleLogOut}>
+          <Text style={{ color: 'white', fontWeight: '700' }}>Logout</Text>
+        </Button>
+      </View>
     </ScreenWrapper>
   )
 }
