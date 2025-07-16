@@ -1,16 +1,16 @@
 import { Link, useRouter } from 'expo-router';
 import React from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native';
+import { Text, View, StyleSheet, Alert, Dimensions, Image } from 'react-native';
 import Button from '@/components/Button';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import { supabase } from '@/lib/supabase';
+
 
 // Sorry ges, I dont wanna set the default to flashCardPage that's why i made a button
 // Feel free to move the flashcard button navigation around, just make sure that i can still access the flashcard page XD
 // Don't worry, I didn't download any strange imports
 
 const router = useRouter()
-
 const handleLogOut = async() =>{
   try {
     const { error } = await supabase.auth.signOut()
@@ -26,25 +26,42 @@ const handleLogOut = async() =>{
   }
 }
 
-const HomeScreen = () => {
+const index = () => {
   return (
-    <ScreenWrapper>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>HomePage</Text>
-        <Link href="/flashCardPage">Flash Cards</Link>
-        <Link href="/cameraPage">Pix it!</Link>
-        {/* <Button
-          title="Go to FlashCard Page"
-          onPress={() => navigation.navigate('FlashCard')}
-        /> */}
-        <Button style={{ width: '50%' }} onPress={handleLogOut}>
-          <Text style={{ color: 'white' }}>LogOut</Text>
-        </Button>
+    <ScreenWrapper style={styles.container}>
+      <View style={styles.mainThing}>
+        <Image source={require('../../assets/images/Logo.png')} style={{ width: 220, height: 180}}/>
+        <Text style={styles.subtext}>Learning through lenses, growing through curiosity</Text>
       </View>
+
+      <Button style={{ width: '50%' }} onPress={handleLogOut}>
+        <Text style={{ color: 'white', fontWeight: '700' }}>Logout</Text>
+      </Button>
     </ScreenWrapper>
-  );
+  )
 }
 
-export default HomeScreen
+export default index
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  subtext: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center', 
+  },
+  mainThing: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 20,
+    paddingHorizontal: 0,
+    paddingVertical: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
+  },
+})
