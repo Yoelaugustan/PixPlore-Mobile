@@ -65,7 +65,7 @@ const Register = () => {
     }
     
     return (
-        <ScreenWrapper style={{ flex: 1, backgroundColor: '#65ff96ff' }}>
+        <ScreenWrapper style={{ backgroundColor: '#65ff96ff' }}>
             <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={styles.container}>
                     {/* Back Button */}

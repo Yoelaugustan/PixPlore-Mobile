@@ -27,7 +27,7 @@ const handleLogOut = async() =>{
 
 const index = () => {
   return (
-    <ScreenWrapper style={{ flex: 1 }}>
+    <ScreenWrapper>
       <View style={styles.container}>
         <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)} style={styles.mainThing}>
           <Image source={require('../../assets/images/Logo.png')} style={{ width: 220, height: 180}}/>

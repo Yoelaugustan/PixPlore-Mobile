@@ -10,7 +10,7 @@ import Animated, { FadeIn, FadeInDown } from "react-native-reanimated"
 const Welcome = () => {
     const router = useRouter();
     return (
-        <ScreenWrapper style={{ flex: 1, backgroundColor: '#e291ffff', }}>
+        <ScreenWrapper style={{ backgroundColor: '#e291ffff', }}>
             <View style={styles.container}>
                 <View style={styles.content}>
                 <Animated.Image

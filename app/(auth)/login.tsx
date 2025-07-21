@@ -49,7 +49,7 @@ const Login = () => {
     }
 
     return (
-        <ScreenWrapper style={{ flex: 1, backgroundColor: '#e5ff7bff' }}>
+        <ScreenWrapper style={{ backgroundColor: '#e5ff7bff' }}>
             <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={styles.container}>
                     {/* Back Button */}
