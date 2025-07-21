@@ -1,10 +1,9 @@
-import { Link, useRouter } from 'expo-router';
-import React from 'react';
-import { Text, View, StyleSheet, Alert, Dimensions, Image } from 'react-native';
-import Button from '@/components/Button';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import { supabase } from '@/lib/supabase';
-
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { Alert, Image, StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 // Sorry ges, I dont wanna set the default to flashCardPage that's why i made a button
 // Feel free to move the flashcard button navigation around, just make sure that i can still access the flashcard page XD
@@ -28,16 +27,13 @@ const handleLogOut = async() =>{
 
 const index = () => {
   return (
-    <ScreenWrapper style={{ flex: 1 }}>
+    <ScreenWrapper>
       <View style={styles.container}>
-        <View style={styles.mainThing}>
+        <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)} style={styles.mainThing}>
           <Image source={require('../../assets/images/Logo.png')} style={{ width: 220, height: 180}}/>
           <Text style={styles.subtext}>Learning through lenses, growing through curiosity</Text>
-        </View>
-
-        <Button style={{ width: '50%' }} onPress={handleLogOut}>
-          <Text style={{ color: 'white', fontWeight: '700' }}>Logout</Text>
-        </Button>
+        </Animated.View>
+        
       </View>
     </ScreenWrapper>
   )
@@ -60,9 +56,10 @@ const styles = StyleSheet.create({
   mainThing: {
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 20,
-    paddingHorizontal: 0,
-    paddingVertical: 10,
+    marginHorizontal: 20,
+    marginBottom: 40,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
     backgroundColor: 'white',
     borderRadius: 10,
   },
