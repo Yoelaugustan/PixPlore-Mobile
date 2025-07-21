@@ -1,8 +1,8 @@
-import { ScreenWrapperProps } from '@/types'
-import React from 'react'
-import { Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native'
+import { ScreenWrapperProps } from '@/types';
+import React from 'react';
+import { Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import Animated, { FadeIn } from "react-native-reanimated";
 import Svg, { Circle, Defs, Polygon, RadialGradient, Rect, Stop } from 'react-native-svg';
-
 const {height, width} = Dimensions.get('window')
 
 const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
@@ -51,7 +51,7 @@ const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
   const y3 = cy - rectHeight3 / 2;
   
   return (
-    <View style={[styles.container, style]}>
+    <Animated.View entering={FadeIn.duration(1000).springify().damping(12)} style={[styles.container, style]}>
         <StatusBar barStyle='light-content' translucent={true} backgroundColor="transparent"/>
 
         <Svg height="100%" width="100%" style={StyleSheet.absoluteFillObject}>
@@ -80,11 +80,11 @@ const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
           <Circle cx="30%" cy="30%" r="500" fill="url(#grad1)" />
           <Circle cx="90%" cy="50%" r="500" fill="url(#grad2)" />
           <Circle cx="30%" cy="90%" r="500" fill="url(#grad3)" />
-  
+
           <Rect x={x1} y={y1} width={rectWidth1} height={rectHeight1} rx="10" fill="white" opacity={0.3} />
           <Rect x={x2} y={y2} width={rectWidth2} height={rectHeight2} rx="10" fill="white" opacity={0.2} />
           <Rect x={x3} y={y3} width={rectWidth3} height={rectHeight3} rx="10" fill="white" opacity={0.1} />
-  
+
           <Polygon points={points1} fill="url(#grad4)" />
           <Polygon points={points2} fill="url(#grad5)" />
           
@@ -93,7 +93,7 @@ const ScreenWrapper = ({style, children, isModal}: ScreenWrapperProps) => {
         <View style={[styles.contentContainer, { paddingTop, paddingBottom }]}>
           {children}
       </View>
-    </View>
+    </Animated.View>
   )
 }
 
