@@ -1,15 +1,22 @@
 import ScreenWrapper from '@/components/ScreenWrapper';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   FlatList,
   Image,
-  Pressable,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   useWindowDimensions,
-  View,
+  View
 } from 'react-native';
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
+// Flashcards Assets
 type FlashCardItem = {
   id: string;
   image_link: string;
@@ -92,6 +99,7 @@ const rawData = [
   },
 ];
 
+// Mapping Borders and Animations
 const processedData = rawData.map((item, index) => {
   const frameId = (index % 16) + 1;
   return {
@@ -101,53 +109,65 @@ const processedData = rawData.map((item, index) => {
   };
 });
 
-const { width: screenWidth } = useWindowDimensions();
-const padding = 16 * 2; // from contentContainerStyle
-const gap = 16;
-const numColumns = Math.floor(screenWidth / 160) || 1;
-
-const totalGap = (numColumns - 1) * gap;
-const usableWidth = screenWidth - padding - totalGap;
-const CARD_WIDTH = usableWidth / numColumns;
-const CARD_HEIGHT = CARD_WIDTH * 1.5;
-
 const FlashCard = ({ item, cardWidth }: { item: FlashCardItem; cardWidth: number }) => {
-  const [flipped, setFlipped] = useState(false);
+  const flip = useSharedValue(0);
   const cardHeight = cardWidth * 1.5;
 
+  const frontStyle = useAnimatedStyle(() => ({
+    transform: [
+      { perspective: 1000 },
+      { rotateY: `${interpolate(flip.value, [0, 1], [0, 180])}deg` }
+    ],
+    backfaceVisibility: 'hidden',
+  }));
+
+  const backStyle = useAnimatedStyle(() => ({
+    transform: [
+      { perspective: 1000 },
+      { rotateY: `${interpolate(flip.value, [0, 1], [180, 360])}deg` }
+    ],
+    backfaceVisibility: 'hidden',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  }));
+
   return (
-    <Pressable
-      onPress={() => setFlipped(!flipped)}
-      style={[styles.cardWrapper, { width: cardWidth, height: cardHeight }]}
-    >
-      <View style={[styles.imageContainer, { backgroundColor: item.backgroundColor }]}>
-        {flipped ? (
-          <View style={[styles.card, { backgroundColor: item.backgroundColor }]}>
-            <Text style={styles.cardText}>{item.label}</Text>
-          </View>
-        ) : (
-          <>
-            <Image
-              source={{ uri: item.image_link }}
-              style={styles.mainImage}
-              resizeMode="cover"
-            />
-            <Image
-              source={frameMap[item.frameId]}
-              style={styles.borderOverlay}
-              resizeMode="stretch"
-            />
-          </>
-        )}
+    <TouchableWithoutFeedback onPress={() => {
+      flip.value = withTiming(flip.value === 0 ? 1 : 0, { duration: 300 });
+    }}>
+      <View style={[styles.cardWrapper, { width: cardWidth, height: cardWidth * 1.5 }]}>
+        <Animated.View style={[styles.card, frontStyle, { backgroundColor: item.backgroundColor }]}>
+          <Image
+            source={{ uri: item.image_link }}
+            style={styles.mainImage}
+            resizeMode="cover"
+          />
+          <Image
+            source={frameMap[item.frameId]}
+            style={styles.borderOverlay}
+            resizeMode="stretch"
+          />
+        </Animated.View>
+
+        <Animated.View style={[styles.card, backStyle, { backgroundColor: item.backgroundColor }]}>
+          <Text style={styles.cardText}>{item.label}</Text>
+        </Animated.View>
       </View>
-    </Pressable>
+    </TouchableWithoutFeedback>
   );
 };
 
 export default function FlashCardPage() {
-  const { width } = useWindowDimensions();
-  const numColumns = Math.floor(width / CARD_WIDTH) || 1;
+  const { width: screenWidth } = useWindowDimensions();
+  const padding = 16 * 2;
+  const gap = 16;
+  const numColumns = Math.floor(screenWidth / 160) || 1;
 
+  const totalGap = (numColumns - 1) * gap;
+  const usableWidth = screenWidth - padding - totalGap;
+  const CARD_WIDTH = usableWidth / numColumns;
+  const CARD_HEIGHT = CARD_WIDTH * 1.5;
   return (
     <ScreenWrapper style={styles.container}>
       <Text style={styles.header}>Tap to Reveal!</Text>
@@ -185,15 +205,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   cardWrapper: {
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
     marginHorizontal: 8,
   },
   card: {
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    backfaceVisibility: 'hidden',
     borderRadius: 16,
-    flex: 1,
+    overflow: 'hidden',
   },
   cardText: {
     fontSize: 24,
@@ -201,22 +222,10 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
   },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  imageContainer: {
-    borderRadius: 16,
-    overflow: 'hidden',
-    position: 'relative',
-    flex: 1,
-  },
-
   mainImage: {
     width: '100%',
     height: '100%',
   },
-
   borderOverlay: {
     position: 'absolute',
     width: '100%',
@@ -224,5 +233,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     zIndex: 1,
+    borderRadius: 16,
+    overflow: 'hidden',
   },
 });
