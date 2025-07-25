@@ -1,22 +1,50 @@
 import ScreenWrapper from '@/components/ScreenWrapper';
 import React, { useState } from 'react';
 import {
-    FlatList,
-    Image,
-    Pressable,
-    StyleSheet,
-    Text,
-    useWindowDimensions,
-    View,
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
 } from 'react-native';
 
 type FlashCardItem = {
   id: string;
   image_link: string;
   label: string;
+  frameId: number;
+  backgroundColor: string;
 };
 
-const DATA: FlashCardItem[] = [
+const frameMap: Record<number, number> = {
+  1: require('@/assets/flashcard_borders/1.png'),
+  2: require('@/assets/flashcard_borders/2.png'),
+  3: require('@/assets/flashcard_borders/3.png'),
+  4: require('@/assets/flashcard_borders/4.png'),
+  5: require('@/assets/flashcard_borders/5.png'),
+  6: require('@/assets/flashcard_borders/6.png'),
+  7: require('@/assets/flashcard_borders/7.png'),
+  8: require('@/assets/flashcard_borders/8.png'),
+  9: require('@/assets/flashcard_borders/9.png'),
+  10: require('@/assets/flashcard_borders/10.png'),
+  11: require('@/assets/flashcard_borders/11.png'),
+  12: require('@/assets/flashcard_borders/12.png'),
+  13: require('@/assets/flashcard_borders/13.png'),
+  14: require('@/assets/flashcard_borders/14.png'),
+  15: require('@/assets/flashcard_borders/15.png'),
+  16: require('@/assets/flashcard_borders/16.png'),
+};
+
+const borderColors = [
+  "#A0F8FF", "#FF8CC6", "#F86666", "#90D76B",
+  "#CBA3FF", "#FFF685", "#A3DFFF", "#FCA3B7",
+  "#D6FF70", "#B5FBC0", "#FFB347", "#FFD8A9",
+  "#B3C7FF", "#66CFFF", "#6BD6D3", "#FFE266"
+];
+
+const rawData = [
   {
     id: '1',
     image_link: 'https://assets.clevelandclinic.org/transform/cd71f4bd-81d4-45d8-a450-74df78e4477a/Apples-184940975-770x533-1_jpg',
@@ -64,6 +92,15 @@ const DATA: FlashCardItem[] = [
   },
 ];
 
+const processedData = rawData.map((item, index) => {
+  const frameId = (index % 16) + 1;
+  return {
+    ...item,
+    frameId,
+    backgroundColor: borderColors[frameId - 1],
+  };
+});
+
 const { width: screenWidth } = useWindowDimensions();
 const padding = 16 * 2; // from contentContainerStyle
 const gap = 16;
@@ -83,11 +120,24 @@ const FlashCard = ({ item, cardWidth }: { item: FlashCardItem; cardWidth: number
       onPress={() => setFlipped(!flipped)}
       style={[styles.cardWrapper, { width: cardWidth, height: cardHeight }]}
     >
-      <View style={styles.card}>
+      <View style={[styles.imageContainer, { backgroundColor: item.backgroundColor }]}>
         {flipped ? (
-          <Text style={styles.cardText}>{item.label}</Text>
+          <View style={[styles.card, { backgroundColor: item.backgroundColor }]}>
+            <Text style={styles.cardText}>{item.label}</Text>
+          </View>
         ) : (
-          <Image source={{ uri: item.image_link }} style={styles.image} resizeMode="cover" />
+          <>
+            <Image
+              source={{ uri: item.image_link }}
+              style={styles.mainImage}
+              resizeMode="cover"
+            />
+            <Image
+              source={frameMap[item.frameId]}
+              style={styles.borderOverlay}
+              resizeMode="stretch"
+            />
+          </>
         )}
       </View>
     </Pressable>
@@ -102,7 +152,7 @@ export default function FlashCardPage() {
     <ScreenWrapper style={styles.container}>
       <Text style={styles.header}>Tap to Reveal!</Text>
       <FlatList
-        data={DATA}
+        data={processedData}
         renderItem={({ item }) => <FlashCard item={item} cardWidth={CARD_WIDTH} />}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
@@ -140,14 +190,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   card: {
-    backgroundColor: '#FFD966',
-    flex: 1,
-    borderRadius: 20,
-    alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
-    overflow: 'hidden',
-    elevation: 4,
+    alignItems: 'center',
+    borderRadius: 16,
+    flex: 1,
   },
   cardText: {
     fontSize: 24,
@@ -158,5 +204,25 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+  },
+  imageContainer: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    position: 'relative',
+    flex: 1,
+  },
+
+  mainImage: {
+    width: '100%',
+    height: '100%',
+  },
+
+  borderOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0,
+    zIndex: 1,
   },
 });
