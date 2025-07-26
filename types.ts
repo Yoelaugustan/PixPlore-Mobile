@@ -24,3 +24,8 @@ export interface CustomButtonProps extends TouchableOpacityProps {
     loading?: boolean;
     children: React.ReactNode;
 }
+
+export interface UseAuthReturn {
+    userName: string
+    userEmail: string
+}
