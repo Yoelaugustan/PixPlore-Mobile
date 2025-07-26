@@ -29,15 +29,15 @@ const mainPage = () => {
                 {/* Masih agak jelek, tapi setidaknya tombol fungsional wkwkwk */}
                 <View style = {styles.mainThing}>
                     <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)} style={{ width: '50%' }}>
-                        <Image source={require('../../assets/images/react-logo.png')} style={{ width: 75, height: 75}}/> 
+                        <Image source={require('../../assets/images/react-logo.png')} style={{ width: 75, height: 75, alignSelf: 'center'}}/> 
                         {/* nanti ganti sama user profile */}
                     </Animated.View>
-                    <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)} style={{ width: '50%' }}>
-                        <Text>Username</Text>
+                    <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)} style={{ alignSelf: 'center' }}>
+                        <Text style={{fontSize: 24, fontWeight: 'bold'}}>Username</Text>
                     </Animated.View>
                     <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)}>
-                        <Button onPress={handleLogOut}>
-                            <Text style={{ color: 'white', fontWeight: '700' }}>Logout</Text>
+                        <Button onPress={handleLogOut} style={{marginTop:10}}>
+                            <Text style={{ color: 'white', fontWeight: 'bold', fontSize:15, paddingHorizontal: 20 }}>Logout</Text>
                         </Button>
                     </Animated.View>
                 </View>
@@ -57,12 +57,10 @@ const styles = StyleSheet.create({
     },
 
     mainThing: {
+        height: '40%',
+        width: '80%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: 20,
-        marginBottom: 40,
-        paddingHorizontal: 20,
-        paddingBottom: 10,
         backgroundColor: 'white',
         borderRadius: 10,
     }

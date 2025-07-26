@@ -17,7 +17,7 @@ export default function FlashCardPage() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 0.5,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'blue',
