@@ -52,3 +52,8 @@ export const frameMap: Record<number, number> = {
   15: require('@/assets/flashcard_borders/15.png'),
   16: require('@/assets/flashcard_borders/16.png'),
 };
+
+export interface UseAuthReturn {
+    userName: string
+    userEmail: string
+}
