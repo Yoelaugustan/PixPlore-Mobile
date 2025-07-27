@@ -1,11 +1,15 @@
 import ScreenWrapper from '@/components/ScreenWrapper';
+import { spacingY } from '@/constants/theme';
 import { useFlashcards } from '@/hooks/useFlashcard';
 import { FlashCardItem, frameMap } from '@/types';
+import { scale, verticalScale } from '@/utils/styling';
+import { useFocusEffect } from 'expo-router';
 import React from 'react';
 import {
   ActivityIndicator,
   FlatList,
   Image,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -68,13 +72,6 @@ const FlashCard = ({ item, cardWidth }: { item: FlashCardItem; cardWidth: number
   );
 };
 
-const LoadingSpinner = () => (
-  <View style={styles.loadingContainer}>
-    <ActivityIndicator size="large" color="#6562ff" />
-    <Text style={styles.loadingText}>Loading your flashcards...</Text>
-  </View>
-);
-
 export default function FlashCardPage() {
   const { width: screenWidth } = useWindowDimensions();
   const padding = 16 * 2;
@@ -85,26 +82,56 @@ export default function FlashCardPage() {
   const usableWidth = screenWidth - padding - totalGap;
   const CARD_WIDTH = usableWidth / numColumns;
 
-  const { flashcards, loading } = useFlashcards();
+  const { flashcards, loading, refreshFlashcards } = useFlashcards();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refreshFlashcards();
+    }, [])
+  );
 
   if (loading) {
-    return <LoadingSpinner />;
+    return(
+      <ScreenWrapper style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#6562ff" />
+        <Text style={styles.loadingText}>Loading your flashcards...</Text>
+    </ScreenWrapper>
+    );
   }
 
   return (
     <ScreenWrapper style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.header}>Tap to Reveal!</Text>
-        <FlatList
-          data={flashcards}
-          renderItem={({ item }) => <FlashCard item={item} cardWidth={CARD_WIDTH} />}
-          keyExtractor={(item) => item.id}
-          numColumns={numColumns}
-          columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
-          contentContainerStyle={styles.list}
-          style={styles.flatList}
-          showsVerticalScrollIndicator={false}
-        />
+
+        {
+          flashcards.length > 0 ? (
+            <FlatList
+              data={flashcards}
+              renderItem={({ item }) => <FlashCard item={item} cardWidth={CARD_WIDTH} />}
+              keyExtractor={(item) => item.id}
+              numColumns={numColumns}
+              columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
+              contentContainerStyle={styles.list}
+              style={styles.flatList}
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl
+                  refreshing={loading}
+                  onRefresh={refreshFlashcards}
+                  tintColor="#6562ff"
+                  colors={["#6562ff"]}
+                />
+              }
+            />
+          ) : (
+            <View style={styles.noDataContainer}>
+              <Text style={styles.noDataText}>
+                Start taking pictures to create your first flashcard collection!
+              </Text>
+            </View>
+          )
+        }
       </View>
     </ScreenWrapper>
   );
@@ -173,12 +200,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
   },
   loadingText: {
     marginTop: 16,
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
+  },
+  noDataContainer: {
+    padding: scale(40),
+    marginBottom: spacingY._20,
+    alignItems: 'center',
+  },
+  noDataText: {
+    textAlign: 'center',
+    fontSize: verticalScale(20),
+    fontWeight: '700',
   },
 });

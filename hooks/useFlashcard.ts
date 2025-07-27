@@ -30,8 +30,7 @@ export const useFlashcards = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const fetchFlashcards = async () => {
+  const fetchFlashcards = async () => {
       if (!user) {
         setFlashcards([]);
         setLoading(false);
@@ -68,6 +67,11 @@ export const useFlashcards = () => {
       }
     };
 
+    const refreshFlashcards = () => {
+        fetchFlashcards();
+    };
+
+  useEffect(() => {
     fetchFlashcards();
   }, [user]);
 
@@ -75,5 +79,6 @@ export const useFlashcards = () => {
     flashcards,
     loading,
     error,
+    refreshFlashcards
   };
 };
