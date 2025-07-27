@@ -1,4 +1,5 @@
 import ScreenWrapper from '@/components/ScreenWrapper';
+import { FlashCardItem, frameMap } from '@/types';
 import React from 'react';
 import {
   FlatList,
@@ -15,34 +16,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-
-// Flashcards Assets
-type FlashCardItem = {
-  id: string;
-  image_link: string;
-  label: string;
-  frameId: number;
-  backgroundColor: string;
-};
-
-const frameMap: Record<number, number> = {
-  1: require('@/assets/flashcard_borders/1.png'),
-  2: require('@/assets/flashcard_borders/2.png'),
-  3: require('@/assets/flashcard_borders/3.png'),
-  4: require('@/assets/flashcard_borders/4.png'),
-  5: require('@/assets/flashcard_borders/5.png'),
-  6: require('@/assets/flashcard_borders/6.png'),
-  7: require('@/assets/flashcard_borders/7.png'),
-  8: require('@/assets/flashcard_borders/8.png'),
-  9: require('@/assets/flashcard_borders/9.png'),
-  10: require('@/assets/flashcard_borders/10.png'),
-  11: require('@/assets/flashcard_borders/11.png'),
-  12: require('@/assets/flashcard_borders/12.png'),
-  13: require('@/assets/flashcard_borders/13.png'),
-  14: require('@/assets/flashcard_borders/14.png'),
-  15: require('@/assets/flashcard_borders/15.png'),
-  16: require('@/assets/flashcard_borders/16.png'),
-};
 
 const borderColors = [
   "#A0F8FF", "#FF8CC6", "#F86666", "#90D76B",
@@ -167,18 +140,22 @@ export default function FlashCardPage() {
   const totalGap = (numColumns - 1) * gap;
   const usableWidth = screenWidth - padding - totalGap;
   const CARD_WIDTH = usableWidth / numColumns;
-  const CARD_HEIGHT = CARD_WIDTH * 1.5;
+  
   return (
     <ScreenWrapper style={styles.container}>
-      <Text style={styles.header}>Tap to Reveal!</Text>
-      <FlatList
-        data={processedData}
-        renderItem={({ item }) => <FlashCard item={item} cardWidth={CARD_WIDTH} />}
-        keyExtractor={(item) => item.id}
-        numColumns={numColumns}
-        columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
-        contentContainerStyle={styles.list}
-      />
+      <View style={styles.content}>
+        <Text style={styles.header}>Tap to Reveal!</Text>
+        <FlatList
+          data={processedData}
+          renderItem={({ item }) => <FlashCard item={item} cardWidth={CARD_WIDTH} />}
+          keyExtractor={(item) => item.id}
+          numColumns={numColumns}
+          columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
+          contentContainerStyle={styles.list}
+          style={styles.flatList}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
     </ScreenWrapper>
   );
 }
@@ -186,7 +163,9 @@ export default function FlashCardPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFBF5',
+  },
+  content: {
+    flex: 1,
     paddingTop: 40,
   },
   header: {
@@ -196,9 +175,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
   },
+  flatList: {
+    flex: 1,
+  },
   list: {
     paddingHorizontal: 16,
     paddingBottom: 40,
+    flexGrow: 1,
   },
   row: {
     justifyContent: 'space-between',
