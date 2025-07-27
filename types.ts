@@ -53,6 +53,13 @@ export const frameMap: Record<number, number> = {
   16: require('@/assets/flashcard_borders/16.png'),
 };
 
+export const borderColors = [
+  "#A0F8FF", "#FF8CC6", "#F86666", "#90D76B",
+  "#CBA3FF", "#FFF685", "#A3DFFF", "#FCA3B7",
+  "#D6FF70", "#B5FBC0", "#FFB347", "#FFD8A9",
+  "#B3C7FF", "#66CFFF", "#6BD6D3", "#FFE266"
+];
+
 export interface UseAuthReturn {
     userName: string
     userEmail: string
