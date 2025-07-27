@@ -10,6 +10,7 @@ import {
   FlatList,
   Image,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -92,10 +93,15 @@ export default function FlashCardPage() {
 
   if (loading) {
     return(
-      <ScreenWrapper style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6562ff" />
-        <Text style={styles.loadingText}>Loading your flashcards...</Text>
-    </ScreenWrapper>
+      <ScreenWrapper style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.header}>Tap to Reveal!</Text>
+          <View style={styles.noDataContainer}>
+            <ActivityIndicator size="large" color="#6562ff" />
+            <Text style={styles.loadingText}>Loading your flashcards...</Text>
+          </View>
+        </View>
+      </ScreenWrapper>
     );
   }
 
@@ -125,11 +131,21 @@ export default function FlashCardPage() {
               }
             />
           ) : (
-            <View style={styles.noDataContainer}>
+            <ScrollView 
+              contentContainerStyle={styles.noDataContainer}
+              refreshControl={
+                <RefreshControl
+                  refreshing={loading}
+                  onRefresh={refreshFlashcards}
+                  tintColor="#6562ff"
+                  colors={["#6562ff"]}
+                />
+              }
+            >
               <Text style={styles.noDataText}>
                 Start taking pictures to create your first flashcard collection!
               </Text>
-            </View>
+            </ScrollView>
           )
         }
       </View>
@@ -203,14 +219,15 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 16,
-    fontSize: 16,
-    color: '#666',
+    fontSize: verticalScale(15),
+    color: '#333',
     textAlign: 'center',
   },
   noDataContainer: {
     padding: scale(40),
     marginBottom: spacingY._20,
     alignItems: 'center',
+    paddingHorizontal: scale(40)
   },
   noDataText: {
     textAlign: 'center',
