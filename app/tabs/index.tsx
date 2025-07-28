@@ -3,11 +3,8 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Alert, Image, StyleSheet, Text, View } from 'react-native';
+import 'react-native-reanimated';
 import Animated, { FadeInDown } from "react-native-reanimated";
-
-// Sorry ges, I dont wanna set the default to flashCardPage that's why i made a button
-// Feel free to move the flashcard button navigation around, just make sure that i can still access the flashcard page XD
-// Don't worry, I didn't download any strange imports
 
 const router = useRouter()
 const handleLogOut = async() =>{

@@ -1,6 +1,9 @@
 import Button from '@/components/Button';
 import ScreenWrapper from '@/components/ScreenWrapper';
+import { radius, spacingX, spacingY } from '@/constants/theme';
+import useAuth from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
+import { scale, verticalScale } from '@/utils/styling';
 import { useRouter } from 'expo-router';
 import React from "react";
 import { Alert, Image, StyleSheet, Text, View } from "react-native";
@@ -20,9 +23,11 @@ const handleLogOut = async() =>{
     console.error('Logout error:', error)
     Alert.alert('Logout Error', 'An unexpected error occurred')
   }
-}
+} 
 
 const mainPage = () => {
+    const { userName } = useAuth()
+    
     return (
         <ScreenWrapper style={{ flex: 1, backgroundColor: '#97c4ffff'}}>
             <View style={styles.container}>
@@ -30,13 +35,12 @@ const mainPage = () => {
                 <View style = {styles.mainThing}>
                     <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)} style={{ width: '50%' }}>
                         <Image source={require('../../assets/images/react-logo.png')} style={{ width: 75, height: 75}}/> 
-                        {/* nanti ganti sama user profile */}
                     </Animated.View>
-                    <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)} style={{ width: '50%' }}>
-                        <Text>Username</Text>
+                    <Animated.View entering={FadeInDown.duration(3000).springify().damping(12)} style={{ width: '50%' }}>
+                        <Text style={{textTransform: 'capitalize', fontSize: verticalScale(15), fontWeight: '700'}}>{userName}</Text>
                     </Animated.View>
-                    <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)}>
-                        <Button onPress={handleLogOut}>
+                    <Animated.View entering={FadeInDown.duration(5000).springify().damping(12)}>
+                        <Button onPress={handleLogOut} style={{paddingHorizontal: spacingX._30}}>
                             <Text style={{ color: 'white', fontWeight: '700' }}>Logout</Text>
                         </Button>
                     </Animated.View>
@@ -59,11 +63,10 @@ const styles = StyleSheet.create({
     mainThing: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: 20,
-        marginBottom: 40,
-        paddingHorizontal: 20,
-        paddingBottom: 10,
+        paddingHorizontal: spacingX._20,
+        paddingVertical: spacingY._20,
         backgroundColor: 'white',
-        borderRadius: 10,
+        borderRadius: radius._10,
+        gap: spacingY._10,
     }
 })
