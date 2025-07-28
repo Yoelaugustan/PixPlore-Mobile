@@ -64,3 +64,45 @@ export interface UseAuthReturn {
     userName: string
     userEmail: string
 }
+
+export interface AIResponse {
+  success: boolean;
+  predicted_name: string;
+  confidence: number;
+  spelling: string[];
+  description: string;
+  image_url: string;
+  saved_to_db: boolean;
+  user_id: string;
+  display_data: {
+    word: string;
+    spelling: string[];
+    description: string;
+  };
+}
+
+export interface TTSResponse {
+  success: boolean;
+  audio_base64: string;
+  spelling_sentence: string;
+  word: string;
+}
+
+export interface UseAIAnalysisReturn {
+  // Functions
+  analyzeImage: (imageUri: string) => Promise<void>;
+  generateTTS: (displayData: { word: string; spelling: string[]; description: string }) => Promise<void>;
+  playAudio: (audioBase64?: string) => Promise<void>;
+  testConnection: () => Promise<void>;
+  resetAnalysis: () => void;
+
+  // States
+  isAnalyzing: boolean;
+  isGeneratingTTS: boolean;
+  analysisResult: AIResponse | null;
+  ttsData: TTSResponse | null;
+  error: string | null;
+
+  // Audio
+  sound: Audio.Sound | null;
+}
