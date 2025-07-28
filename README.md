@@ -74,7 +74,7 @@ ngrok authtoken YOUR_AUTH_TOKEN
 
 ```bash
 # Navigate to backend directory
-cd backend
+cd flask-ai-api
 
 # Activate virtual environment
 # On Windows:
