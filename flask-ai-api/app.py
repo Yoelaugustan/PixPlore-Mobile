@@ -6,26 +6,29 @@ import os
 import json
 import base64
 from io import BytesIO
-import tempfile
 from PIL import Image
 from supabase import create_client, Client
 from datetime import datetime
 import uuid
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Configuration - Use environment variables in production
-SUPABASE_URL = os.getenv("SUPABASE_URL", "your-supabase-url")
-SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "your-supabase-service-role-key")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "your-openai-api-key")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 STORAGE_BUCKET = "flashcards"
 
-# Initialize clients
-if SUPABASE_URL != "your-supabase-url":
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-if OPENAI_API_KEY != "your-openai-api-key":
-    client = OpenAI(api_key=OPENAI_API_KEY)
+print(SUPABASE_ANON_KEY)
+print(SUPABASE_URL)
+print(OPENAI_API_KEY)
+
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Load MobileNet model
 weights = MobileNet_V3_Large_Weights.DEFAULT
@@ -34,20 +37,42 @@ model.eval()
 preprocess = weights.transforms()
 
 def get_spelled_and_description_word(word):
-    """Get spelling and description from OpenAI"""
+    functions = [
+        {
+            "name": "spell_word",
+            "description": "You are a helpful kindergarten teacher. Provide simple explanations for children.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "spelling": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Spell the word letter by letter so children could understand"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": f"Describe the {word} in around 1 to 3 short sentences that is understandable for children"
+                    }
+                },
+                "required": ["spelling", "description"]
+            }
+        }
+    ]
+
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are a helpful kindergarten teacher. Provide simple explanations for children."},
-                {"role": "user", "content": f"For the word '{word}', provide: 1) Individual letters for spelling, 2) A simple 1-2 sentence description that children can understand. Format as JSON with 'spelling' (array of letters) and 'description' (string)."}
+                {"role": "user", "content": f"For the word '{word}', provide: 1) Individual letters for spelling, 2) A simple 1-2 sentence description that children can understand"}
             ],
+            functions=functions,
             temperature=0.2
         )
         
-        content = response.choices[0].message.content
         try:
-            parsed = json.loads(content)
+            args = response.choices[0].message.function_call.arguments
+            parsed = json.loads(args)
             return parsed
         except:
             letters = list(word.upper())
@@ -64,7 +89,6 @@ def get_spelled_and_description_word(word):
         }
 
 def upload_to_supabase_storage(image_data, user_email):
-    """Upload base64 image to Supabase Storage"""
     try:
         if ',' in image_data:
             image_data = image_data.split(',')[1]
@@ -75,14 +99,15 @@ def upload_to_supabase_storage(image_data, user_email):
         unique_id = str(uuid.uuid4())[:8]
         filename = f"{user_email.replace('@', '_').replace('.', '_')}/{timestamp}_{unique_id}.jpg"
         
-        result = supabase.storage.from_(STORAGE_BUCKET).upload(
-            path=filename,
-            file=image_bytes,
-            file_options={"content-type": "image/jpeg"}
-        )
-        
-        if result.status_code != 200:
-            print(f"Upload error: {result}")
+        try:
+            result = supabase.storage.from_(STORAGE_BUCKET).upload(
+                path=filename,
+                file=image_bytes,
+                file_options={"content-type": "image/jpeg"}
+            )
+            print("Upload succeeded.")
+        except Exception as e:
+            print(f"Upload error: {e}")
             return None
         
         public_url_result = supabase.storage.from_(STORAGE_BUCKET).get_public_url(filename)
@@ -91,14 +116,22 @@ def upload_to_supabase_storage(image_data, user_email):
     except Exception as e:
         print(f"Supabase storage upload error: {e}")
         return None
-
-@app.route('/health', methods=['GET'])
-def health_check():
-    return jsonify({
-        "status": "healthy", 
-        "message": "PixPlore AI API with Supabase Storage is running",
-        "storage_bucket": STORAGE_BUCKET
-    })
+    
+def save_to_supabase_database(user_id, image_url, word):
+    """Save to simplified flashcard table: id, user_id, label, image_url"""
+    try:        
+        data = {
+            "user_id": user_id,
+            "label": word.upper(),
+            "image_url": image_url
+        }
+        
+        result = supabase.table('flashcard').insert(data).execute()
+        return result.data
+        
+    except Exception as e:
+        print(f"Supabase database save error: {e}")
+        return None
 
 @app.route('/analyze-image', methods=['POST'])
 def analyze_image():
@@ -108,10 +141,13 @@ def analyze_image():
         if 'image' not in data:
             return jsonify({"error": "No image provided"}), 400
         
-        user_email = data.get('user_email', 'anonymous@example.com')
+        if 'user_id' not in data:
+            return jsonify({"error": "No user_id provided"}), 400
+        
+        user_id = data.get('user_id')
         image_base64 = data['image']
         
-        print(f"Processing image for user: {user_email}")
+        print(f"Processing image for user_id: {user_id}")
         
         # Convert base64 to PIL Image for AI analysis
         image_data = image_base64.split(',')[1] if ',' in image_base64 else image_base64
@@ -125,30 +161,29 @@ def analyze_image():
         score = prediction[class_id].item()
         category_name = weights.meta["categories"][class_id]
         
+        # Clean up category name
         category_name = category_name.replace('_', ' ').title()
         
         print(f"Detected: {category_name} ({100 * score:.1f}%)")
         
-        image_url = upload_to_supabase_storage(image_base64, user_email)
+        # Upload image to Supabase Storage (using user_id folder)
+        image_url = upload_to_supabase_storage(image_base64, user_id)
         
         if not image_url:
             return jsonify({"error": "Failed to upload image"}), 500
         
+        print(f"Image uploaded successfully: {image_url}")
+        
+        save_result = save_to_supabase_database(
+            user_id, 
+            image_url, 
+            category_name
+        )
+        
+        # Generate spelling and description (for display only, not stored)
         spell_data = get_spelled_and_description_word(category_name)
         
-        spelling_sentence = f"Let's learn together! The word is {category_name}. Let's spell it: {' - '.join(spell_data['spelling']).upper()}. {spell_data['description']}"
-        
-        try:
-            tts_response = client.audio.speech.create(
-                model="tts-1",
-                voice="nova",
-                input=spelling_sentence,
-                response_format="mp3"
-            )
-            audio_base64 = base64.b64encode(tts_response.content).decode('utf-8')
-        except Exception as e:
-            print(f"TTS error: {e}")
-            audio_base64 = None
+        print(f"Generated temporary content - Spelling: {spell_data['spelling']}, Description: {spell_data['description']}")
         
         return jsonify({
             "success": True,
@@ -157,14 +192,69 @@ def analyze_image():
             "spelling": spell_data['spelling'],
             "description": spell_data['description'],
             "image_url": image_url,
-            "audio_base64": audio_base64,
-            "spelling_sentence": spelling_sentence
+            "saved_to_db": save_result is not None,
+            "user_id": user_id,
+            "display_data": {
+                "word": category_name,
+                "spelling": spell_data['spelling'],
+                "description": spell_data['description']
+            }
         })
         
     except Exception as e:
         print(f"Error in analyze_image: {e}")
         return jsonify({"error": str(e)}), 500
 
+@app.route('/generate-tts', methods=['POST'])
+def generate_tts():
+    """Separate endpoint for TTS generation - called after display"""
+    try:
+        data = request.json
+        
+        if 'word' not in data or 'spelling' not in data or 'description' not in data:
+            return jsonify({"error": "Missing word, spelling, or description"}), 400
+        
+        word = data['word']
+        spelling = data['spelling']
+        description = data['description']
+        
+        # Generate TTS
+        spelling_sentence = f"Are You Ready Kids, Let's Spell This Together!: {' - '.join(spelling).upper()}. {description}"
+        
+        print(f"Generating TTS for: {word}")
+        
+        try:
+            tts_response = client.audio.speech.create(
+                model="gpt-4o-mini-tts",
+                voice="nova",
+                input=spelling_sentence,
+                response_format="mp3"
+            )
+            audio_base64 = base64.b64encode(tts_response.content).decode('utf-8')
+            
+            return jsonify({
+                "success": True,
+                "audio_base64": audio_base64,
+                "spelling_sentence": spelling_sentence,
+                "word": word
+            })
+            
+        except Exception as e:
+            print(f"TTS error: {e}")
+            return jsonify({"error": f"TTS generation failed: {str(e)}"}), 500
+        
+    except Exception as e:
+        print(f"Error in generate_tts: {e}")
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        "message": "PixPlore API is healthy!",
+        "table_schema": "flashcard(user_id, label, image_url)"
+    })
+
 if __name__ == '__main__':
-    print(f"🚀 Starting PixPlore AI API with Supabase Storage (bucket: {STORAGE_BUCKET})")
+    print(f"🚀 Starting PixPlore AI API with Supabase anon key")
+    print(f"📦 Storage bucket: {STORAGE_BUCKET}")
     app.run(host='0.0.0.0', port=5000, debug=True)
