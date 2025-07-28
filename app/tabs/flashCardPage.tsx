@@ -88,7 +88,7 @@ export default function FlashCardPage() {
   useFocusEffect(
     React.useCallback(() => {
       refreshFlashcards();
-    }, [])
+    }, [refreshFlashcards])
   );
 
   if (loading) {
