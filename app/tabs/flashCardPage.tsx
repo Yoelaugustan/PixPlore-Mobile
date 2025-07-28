@@ -156,6 +156,7 @@ export default function FlashCardPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'blue',
   },
   content: {
     flex: 1,
