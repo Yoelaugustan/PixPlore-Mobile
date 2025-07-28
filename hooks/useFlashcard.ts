@@ -68,12 +68,12 @@ export const useFlashcards = () => {
     };
 
     const refreshFlashcards = () => {
-        fetchFlashcards();
+      fetchFlashcards();
     };
 
   useEffect(() => {
     fetchFlashcards();
-  }, [user]);
+  }, []);
 
   return {
     flashcards,
