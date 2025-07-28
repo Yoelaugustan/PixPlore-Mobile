@@ -94,7 +94,6 @@ export default function App() {
                 <>
                   <ActivityIndicator size="large" color="#2196F3" style={styles.loader} />
                   <Text style={styles.analyzingText}>Analyzing your image...</Text>
-                  <Text style={styles.subText}>Saving to database</Text>
                 </>
               )}
 
@@ -124,17 +123,10 @@ export default function App() {
                     {analysisResult.description}
                   </Text>
 
-                  {/* Database Save Status */}
-                  {analysisResult.saved_to_db && (
-                    <Text style={styles.successText}>
-                      Saved to flashcards!
-                    </Text>
-                  )}
-
                   {/* Error Display */}
                   {error && (
                     <Text style={styles.errorText}>
-                      {error}
+                      There is an error occur, Please Try Again
                     </Text>
                   )}
 

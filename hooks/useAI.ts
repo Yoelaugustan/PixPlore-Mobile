@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
 // Replace with Ngrok http link
-const FLASK_API_URL = 'https://3d0b834d3692.ngrok-free.app';
+const FLASK_API_URL = 'https://4d77b9db4012.ngrok-free.app';
 
 export const useAIAnalysis = (): UseAIAnalysisReturn => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);

@@ -190,7 +190,7 @@ def analyze_image():
             "confidence": round(score * 100, 1),
             "spelling": spell_data['spelling'],
             "description": spell_data['description'],
-            "image_url": image_url,
+            "image_link": image_url,
             "saved_to_db": save_result is not None,
             "user_id": user_id,
             "display_data": {
