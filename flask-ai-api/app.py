@@ -22,12 +22,9 @@ SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 STORAGE_BUCKET = "flashcards"
 
-print(SUPABASE_ANON_KEY)
-print(SUPABASE_URL)
-print(OPENAI_API_KEY)
 
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+supabase: Client = create_client("https://hehseizlrcwfxrijssds.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhlaHNlaXpscmN3ZnhyaWpzc2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTAzMDIsImV4cCI6MjA2ODA2NjMwMn0.Hn8M3K6CZq6I4BmKStVZf4kHiEDRwj5b47Jf-Fj_TWU")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Load MobileNet model
