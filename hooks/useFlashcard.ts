@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { borderColors, FlashCardItem } from '@/types';
@@ -67,9 +67,9 @@ export const useFlashcards = () => {
       }
     };
 
-    const refreshFlashcards = () => {
+    const refreshFlashcards = useCallback(() => {
       fetchFlashcards();
-    };
+    }, [fetchFlashcards]);
 
   useEffect(() => {
     fetchFlashcards();
