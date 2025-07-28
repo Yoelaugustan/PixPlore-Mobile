@@ -61,8 +61,6 @@ const styles = StyleSheet.create({
     },
 
     mainThing: {
-        height: '40%',
-        width: '80%',
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: spacingX._20,
