@@ -118,12 +118,11 @@ def upload_to_supabase_storage(image_data, user_email):
         return None
     
 def save_to_supabase_database(user_id, image_url, word):
-    """Save to simplified flashcard table: id, user_id, label, image_url"""
     try:        
         data = {
             "user_id": user_id,
             "label": word.upper(),
-            "image_url": image_url
+            "image_link": image_url
         }
         
         result = supabase.table('flashcard').insert(data).execute()

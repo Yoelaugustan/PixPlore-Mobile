@@ -93,7 +93,7 @@ export default function App() {
               {isAnalyzing && (
                 <>
                   <ActivityIndicator size="large" color="#2196F3" style={styles.loader} />
-                  <Text style={styles.analyzingText}>AI is analyzing your image...</Text>
+                  <Text style={styles.analyzingText}>Analyzing your image...</Text>
                   <Text style={styles.subText}>Saving to database</Text>
                 </>
               )}
