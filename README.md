@@ -1,3 +1,6 @@
+# Notes
+This Use Expo Go SDK 53
+
 ## Installation & Setup
 
 ### 1. Clone the Repository
