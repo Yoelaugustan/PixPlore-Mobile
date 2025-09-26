@@ -1,4 +1,14 @@
-# Notes
+# PixPlore
+PixPlore is a mobile app designed especially for children to explore and learn about the world around them. When kids are curious about an object, they can simply take a picture of it through the app, and PixPlore will use AI to recognize the object, provide a short and kid-friendly description, and read out how the word is spelled using Text-to-Speech. Each discovery is also saved in a flashcard format, where the front shows the picture of the object and the back reveals its name and description. With PixPlore, everyday curiosity turns into a fun, interactive, and educational experience.
+
+## Fetures
+1. Snap & Discover: Take a photo of an object and let AI identify it
+![Landing Page](assets/images/landing_page.jpeg)
+2. Hear & Spell: Listen to how the word is spelled with Text-to-Speech
+![Classification](assets/images/Image_Classification.jpeg)
+3. Flashcard History: Review past discoveries in a fun flip-card format
+![History](assets/images/History.jpeg)
+## Notes
 This Use Expo Go SDK 53
 
 ## Installation & Setup
